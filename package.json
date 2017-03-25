@@ -1,0 +1,8 @@
+{
+  "name": "react-trigger-change",
+  "version": "1.0.0",
+  "description": "Dispatch change events on React elements",
+  "main": "src/dispatch.js",
+  "author": "Vitaly Kuznetsov",
+  "license": "MIT"
+}
