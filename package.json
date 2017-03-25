@@ -2,7 +2,13 @@
   "name": "react-trigger-change",
   "version": "1.0.0",
   "description": "Dispatch change events on React elements",
-  "main": "src/dispatch.js",
+  "main": "src/trigger.js",
   "author": "Vitaly Kuznetsov",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "browserify src/trigger.js -o dist/react-trigger-change.js"
+  },
+  "devDependencies": {
+    "browserify": "^14.1.0"
+  }
 }
