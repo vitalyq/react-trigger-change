@@ -6,7 +6,7 @@
   "author": "Vitaly Kuznetsov",
   "license": "MIT",
   "scripts": {
-    "build": "browserify src/trigger.js -o dist/react-trigger-change.js"
+    "build": "browserify src/trigger.js -o dist/react-trigger-change.js -s reactTriggerChange"
   },
   "devDependencies": {
     "browserify": "^14.1.0"
