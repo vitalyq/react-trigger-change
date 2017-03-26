@@ -7,7 +7,7 @@
 // https://github.com/facebook/react/pull/5746 - React 16 fix
 // Events only fire if the value in the event hasn't been seen before.
 
-module.exports = function(node, val) {
+module.exports = function(node) {
   // Noop on server
   if (typeof window === 'undefined') {
     return;
@@ -29,10 +29,13 @@ module.exports = function(node, val) {
   // React 0.14: IE9
   // React 15: IE9-IE11
   // React 16
+  // Update inputValueTracking cached value
   // Remove artificial value property
-  // Update value, should be different from the previous one
+  // Restore original value to trigger event with it
+  var originalValue = node.value;
+  node.value = originalValue + '#';
   delete node.value;
-  node.value = val;
+  node.value = originalValue;
 
   // React 0.14: IE9
   // React 15: IE9-IE11

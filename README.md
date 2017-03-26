@@ -1,6 +1,8 @@
 # react-trigger-change
 
-In React production builds `ReactTestUtils.Simulate` doesn't work because of minification. Thus, there is no reliable way to dispatch synthetic change events on elements. Useful for end-to-end/functional tests.
+In React production builds `ReactTestUtils.Simulate` doesn't work because of dead code elimination. Thus, there is no reliable way to dispatch synthetic change events on elements.
+
+This module is a hack and is tightly coupled with React's implementation details. May break with each new version of React. Not intended for production use. Useful for end-to-end testing and debugging.
 
 ## Install
 
@@ -15,9 +17,6 @@ In browser:
 ## Usage
 
 ```
-var node = document.getElementById('myInput');
-var newValue = node.value + 'hello';
-// newValue must be different from node.value
-
-reactTriggerChange(node, newValue);
+var node = document.getElementById('testee');
+reactTriggerChange(node);
 ```
