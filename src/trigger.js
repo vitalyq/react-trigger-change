@@ -13,26 +13,46 @@ module.exports = function(node, val) {
     return;
   }
 
-  // React 0.14: IE9; React 15: IE9-IE11
+  // React 16
+  // Cache artificial value property descriptor
+  // Property doesn't exist in React <16, descriptor is undefined
+  var descriptor = Object.getOwnPropertyDescriptor(node, 'value');
+
+  // React 0.14: IE9
+  // React 15: IE9-IE11
+  // React 16: IE9
   // Dispatch focus
   var focusEvent = document.createEvent('UIEvents');
   focusEvent.initEvent('focus', false, false);
   node.dispatchEvent(focusEvent);
 
+  // React 0.14: IE9
+  // React 15: IE9-IE11
+  // React 16
   // Remove artificial value property
-  delete node.value;
-
   // Update value, should be different from the previous one
+  delete node.value;
   node.value = val;
 
+  // React 0.14: IE9
+  // React 15: IE9-IE11
+  // React 16: IE9
   // Dispatch propertychange
   var propChangeEvent = document.createEvent('HTMLEvents');
   propChangeEvent.initEvent('propertychange', false, false);
   propChangeEvent.propertyName = 'value';
   node.dispatchEvent(propChangeEvent);
 
-  // React 0.14: IE10-IE11, non-IE; React 15: non-IE
+  // React 0.14: IE10-IE11, non-IE
+  // React 15: non-IE
+  // React 16: IE10-IE11, non-IE
   var inputEvent = document.createEvent('HTMLEvents');
   inputEvent.initEvent('input', true, false);
   node.dispatchEvent(inputEvent);
+
+  // React 16
+  // Restore artificial value property descriptor
+  if (descriptor !== undefined) {
+    Object.defineProperty(node, 'value', descriptor);
+  }
 }
