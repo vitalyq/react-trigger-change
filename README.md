@@ -16,7 +16,19 @@ In browser:
 
 ## Usage
 
+`reactTriggerChange(DOMElement);`
+
+## Example
+
 ```
-var node = document.getElementById('testee');
-reactTriggerChange(node);
+var node;
+ReactDOM.render(
+  <input
+    onChange={console.log('changed')}
+    ref={(input) => { node = input; }}
+  />,
+  document.getElementById('root')
+);
+
+reactTriggerChange(node); // changed
 ```
