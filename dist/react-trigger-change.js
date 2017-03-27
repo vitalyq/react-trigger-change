@@ -22,11 +22,6 @@ var supportedInputTypes = {
 };
 
 module.exports = function(node) {
-  // Noop on server
-  if (typeof window === 'undefined') {
-    return;
-  }
-
   var nodeName = node.nodeName.toLowerCase();
   var type = node.type;
 
