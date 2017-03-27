@@ -34,6 +34,14 @@ module.exports = function(node) {
   var nodeName = node.nodeName.toLowerCase();
   var type = node.type;
 
+  var originalChecked;
+  function preventChecking(event) {
+    event.preventDefault();
+    if (!originalChecked) {
+      event.target.checked = false;
+    }
+  }
+
   if (nodeName === 'select' ||
     (nodeName === 'input' && type === 'file')) {
     // IE9-IE11, non-IE
@@ -90,9 +98,8 @@ module.exports = function(node) {
       Object.defineProperty(node, 'value', descriptor);
     }
 
-  } else if (nodeName === 'input' &&
-    (type === 'checkbox' || type === 'radio')) {
-    // Update inputValueTracking cached value to inverted checked value
+  } else if (nodeName === 'input' && type === 'checkbox') {
+    // Invert inputValueTracking cached value
     node.checked = !node.checked;
 
     // Dispatch click
@@ -100,5 +107,39 @@ module.exports = function(node) {
     var clickEvent = document.createEvent('MouseEvents');
     clickEvent.initEvent('click', true, true);
     node.dispatchEvent(clickEvent);
+
+  } else if (nodeName === 'input' && type === 'radio') {
+    // Cache original value
+    originalChecked = node.checked;
+
+    // React 16
+    // Cache property descriptor
+    // Invert inputValueTracking cached value
+    // Remove artificial checked property
+    // Restore original value, otherwise preventDefault will eventually revert the value
+    var descriptor = Object.getOwnPropertyDescriptor(node, 'checked');
+    node.checked = !originalChecked;
+    delete node.checked;
+    node.checked = originalChecked;
+
+    // Prevent checked toggling during event capturing phase
+    // Set checked value to false if originalChecked is false,
+    // otherwise next listeners will see true
+    node.addEventListener('click', preventChecking, true);
+
+    // Dispatch click
+    // Click event inverts checked value
+    var clickEvent = document.createEvent('MouseEvents');
+    clickEvent.initEvent('click', true, true);
+    node.dispatchEvent(clickEvent);
+
+    // Remove listener to stop further change prevention
+    node.removeEventListener('click', preventChecking, true);
+
+    // React 16
+    // Restore artificial checked property descriptor
+    if (descriptor !== undefined) {
+      Object.defineProperty(node, 'checked', descriptor);
+    }
   }
 }
