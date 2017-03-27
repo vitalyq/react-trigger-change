@@ -1,11 +1,6 @@
-// Trigger React synthetic change event on input or textarea.
-// Discussion:
-// https://github.com/facebook/react/issues/3249
-// http://stackoverflow.com/questions/23892547/what-is-the-best-way-to-trigger-onchange-event-in-react-js
-// React changes:
+// Trigger React synthetic change event on input, textarea or select
 // https://github.com/facebook/react/pull/4051 - React 15 fix
 // https://github.com/facebook/react/pull/5746 - React 16 fix
-// Events only fire if the value in the event hasn't been seen before.
 
 var supportedInputTypes = {
   color: true,
