@@ -85,7 +85,7 @@ module.exports = function(node) {
 
     // React 16
     // Restore artificial value property descriptor.
-    if (descriptor !== undefined) {
+    if (descriptor) {
       Object.defineProperty(node, 'value', descriptor);
     }
 
@@ -102,6 +102,20 @@ module.exports = function(node) {
   } else if (nodeName === 'input' && type === 'radio') {
     // Cache original value.
     originalChecked = node.checked;
+
+    // Find and cache initially checked radio in the group.
+    var checkedRadio;
+    if (node.name) {
+      var radios = document.querySelectorAll('input[type="radio"][name="' + node.name + '"]');
+      for (var i = 0; i < radios.length; i += 1) {
+        if (radios[i].checked) {
+          if (radios[i] !== node) {
+            checkedRadio = radios[i];
+          }
+          break;
+        }
+      }
+    }
 
     // React 16
     // Cache property descriptor.
@@ -129,8 +143,13 @@ module.exports = function(node) {
 
     // React 16
     // Restore artificial checked property descriptor.
-    if (descriptor !== undefined) {
+    if (descriptor) {
       Object.defineProperty(node, 'checked', descriptor);
+    }
+
+    // Restore initially checked radio in the group.
+    if (checkedRadio) {
+      checkedRadio.checked = true;
     }
   }
 }
