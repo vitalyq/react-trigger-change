@@ -24,10 +24,10 @@ module.exports = function(node) {
   var nodeName = node.nodeName.toLowerCase();
   var type = node.type;
 
-  var originalChecked;
+  var initialChecked;
   function preventChecking(event) {
     event.preventDefault();
-    if (!originalChecked) {
+    if (!initialChecked) {
       event.target.checked = false;
     }
   }
@@ -60,11 +60,11 @@ module.exports = function(node) {
     // React 16
     // Update inputValueTracking cached value.
     // Remove artificial value property.
-    // Restore original value to trigger event with it.
-    var originalValue = node.value;
-    node.value = originalValue + '#';
+    // Restore initial value to trigger event with it.
+    var initialValue = node.value;
+    node.value = initialValue + '#';
     delete node.value;
-    node.value = originalValue;
+    node.value = initialValue;
 
     // React 0.14: IE9
     // React 15: IE9-IE11
@@ -99,17 +99,17 @@ module.exports = function(node) {
     node.dispatchEvent(clickEvent);
 
   } else if (nodeName === 'input' && type === 'radio') {
-    // Cache original value.
-    originalChecked = node.checked;
+    // Cache initial checked value.
+    initialChecked = node.checked;
 
     // Find and cache initially checked radio in the group.
-    var checkedRadio;
+    var initialCheckedRadio;
     if (node.name) {
       var radios = document.querySelectorAll('input[type="radio"][name="' + node.name + '"]');
       for (var i = 0; i < radios.length; i += 1) {
         if (radios[i].checked) {
           if (radios[i] !== node) {
-            checkedRadio = radios[i];
+            initialCheckedRadio = radios[i];
           }
           break;
         }
@@ -120,14 +120,14 @@ module.exports = function(node) {
     // Cache property descriptor.
     // Invert inputValueTracking cached value.
     // Remove artificial checked property.
-    // Restore original value, otherwise preventDefault will eventually revert the value.
+    // Restore initial value, otherwise preventDefault will eventually revert the value.
     var descriptor = Object.getOwnPropertyDescriptor(node, 'checked');
-    node.checked = !originalChecked;
+    node.checked = !initialChecked;
     delete node.checked;
-    node.checked = originalChecked;
+    node.checked = initialChecked;
 
-    // Prevent checked toggling during event capturing phase.
-    // Set checked value to false if originalChecked is false,
+    // Prevent toggling during event capturing phase.
+    // Set checked value to false if initialChecked is false,
     // otherwise next listeners will see true.
     node.addEventListener('click', preventChecking, true);
 
@@ -147,8 +147,8 @@ module.exports = function(node) {
     }
 
     // Restore initially checked radio in the group.
-    if (checkedRadio) {
-      checkedRadio.checked = true;
+    if (initialCheckedRadio) {
+      initialCheckedRadio.checked = true;
     }
   }
 }
