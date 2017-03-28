@@ -1,7 +1,7 @@
 {
   "name": "react-trigger-change",
   "version": "1.0.0",
-  "description": "Dispatch change events on React elements",
+  "description": "Trigger React's synthetic change event on input, textarea or select",
   "main": "src/trigger.js",
   "author": "Vitaly Kuznetsov",
   "license": "MIT",
