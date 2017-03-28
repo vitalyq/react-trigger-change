@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link rel="stylesheet" href="https://unpkg.com/mocha@3.2.0/mocha.css">
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <script src="https://unpkg.com/mocha@3.2.0/mocha.js"></script>
+  <script src="https://unpkg.com/chai@3.5.0/chai.js"></script>
+  <script src="helpers/load-script-series.js"></script>
+  <script src="helpers/rAF.js"></script>
+  <script src="../dist/react-trigger-change.js"></script>
+
+  <script>
+    mocha.setup('bdd');
+
+    // Load React version based on query string.
+    var defaultVersion = '15.4.2';
+    var getVersion = /[?&]version=([^&]*)/;
+    var result = getVersion.exec(location.search);
+    var version = result ? result[1] : defaultVersion;
+
+    loadScriptSeries([
+      'https://unpkg.com/react@' + version + '/dist/react.min.js',
+      'https://unpkg.com/react-dom@' + version + '/dist/react-dom.min.js',
+      'test.trigger.js'
+    ], function () {
+      mocha.run();
+    });
+  </script>
+</body>
+</html>
