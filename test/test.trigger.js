@@ -8,17 +8,6 @@ describe('#reactTriggerChange', function () {
   var node;
   var changed;
 
-  beforeEach(function () {
-    changed = false;
-    container = document.createElement('div');
-    container.id = 'root';
-    document.body.appendChild(container);
-  });
-
-  afterEach(function () {
-    document.body.removeChild(container);
-  });
-
   function getReference(element) {
     node = element;
   }
@@ -32,6 +21,51 @@ describe('#reactTriggerChange', function () {
     reactTriggerChange(node);
     assert.isTrue(changed, 'change was not triggered');
   }
+
+  // title - test title.
+  // options.tag - tag name to create.
+  // options.props - props object.
+  function createTest(title, options) {
+    it(title, function () {
+      var tag = options.tag;
+      var props = options.props;
+      var checkProperty = 'checked' in props || 'defaultChecked' in props ?
+        'checked' : 'value';
+      var expected;
+      ['value', 'defaultValue', 'checked', 'defaultChecked'].some(function(key) {
+        if (key in props) {
+          expected = props[key];
+          return true;
+        }
+      });
+
+      function handleChangeLocal() {
+        // If checkbox is toggled manually, this will throw.
+        assert.strictEqual(node[checkProperty], expected);
+        changed = true;
+      }
+
+      props.ref = getReference;
+      props.onChange = handleChangeLocal;
+      render(
+        createElement(tag, props),
+        container
+      );
+      triggerAndCheck();
+      assert.strictEqual(node[checkProperty], expected);
+    });
+  }
+
+  beforeEach(function () {
+    changed = false;
+    container = document.createElement('div');
+    container.id = 'root';
+    document.body.appendChild(container);
+  });
+
+  afterEach(function () {
+    document.body.removeChild(container);
+  });
 
   describe('on select', function () {
     it('should not change index (controlled)', function () {
@@ -86,235 +120,95 @@ describe('#reactTriggerChange', function () {
   });
 
   describe('on text input', function () {
-    it('should reattach value property descriptor on input and textarea');
+    it('should reattach value property descriptor');
 
     describe('(controlled)', function () {
-      it('should not change non-empty value', function () {
-        render(
-          createElement('input',
-            { value: 'bar', ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.strictEqual(node.value, 'bar');
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.strictEqual(node.value, 'bar');
+      createTest('should not change empty value', {
+        tag: 'input',
+        props: { value: '' }
       });
 
-      it('should not change empty value', function () {
-        render(
-          createElement('input',
-            { value: '', ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.strictEqual(node.value, '');
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.strictEqual(node.value, '');
+      createTest('should not change non-empty value', {
+        tag: 'input',
+        props: { value: 'bar' }
       });
     });
 
     describe('(uncontrolled)', function () {
-      it('should not change non-empty value', function () {
-        render(
-          createElement('input',
-            { defaultValue: 'bar', ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.strictEqual(node.value, 'bar');
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.strictEqual(node.value, 'bar');
+      createTest('should not change empty value', {
+        tag: 'input',
+        props: { defaultValue: '' }
       });
 
-      it('should not change empty value', function () {
-        render(
-          createElement('input',
-            { defaultValue: '', ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.strictEqual(node.value, '');
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.strictEqual(node.value, '');
+      createTest('should not change non-empty value', {
+        tag: 'input',
+        props: { defaultValue: 'bar' }
       });
 
-      it('should support maxlength attribute on text input', function () {
-        render(
-          createElement('input',
-            { defaultValue: 'x', maxLength: 1, ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.strictEqual(node.value, 'x');
-        }
-        reactTriggerChange(node);
-        assert.strictEqual(node.value, 'x');
+      createTest('should support maxlength attribute on text input', {
+        tag: 'input',
+        props: { defaultValue: 'x', maxLength: 1 }
       });
 
-      it('should support maxlength attribute on textarea', function () {
-        render(
-          createElement('textarea',
-            { defaultValue: 'x', maxLength: 1, ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.strictEqual(node.value, 'x');
-        }
-        reactTriggerChange(node);
-        assert.strictEqual(node.value, 'x');
+      createTest('should support maxlength attribute on textarea', {
+        tag: 'textarea',
+        props: { defaultValue: 'x', maxLength: 1 }
       });
     });
   });
 
   describe('on checkbox', function () {
-    describe('(controlled)', function () {
-      it('should not toggle checked false', function () {
-        render(
-          createElement('input',
-            { type: 'checkbox', checked: false, ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
+    it('should reattach checked property descriptor');
 
-        function handleChangeLocal() {
-          // If checkbox is toggled manually, this will throw.
-          assert.isFalse(node.checked);
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.isFalse(node.checked);
+    describe('(controlled)', function () {
+      createTest('should not toggle unchecked', {
+        tag: 'input',
+        props: { checked: false, type: 'checkbox' }
       });
 
-      it('should not toggle checked true', function () {
-        render(
-          createElement('input',
-            { type: 'checkbox', checked: true, ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
-
-        function handleChangeLocal() {
-          // If checkbox is toggled manually, this will throw.
-          assert.isTrue(node.checked);
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.isTrue(node.checked);
+      createTest('should not toggle checked', {
+        tag: 'input',
+        props: { checked: true, type: 'checkbox' }
       });
     });
 
     describe('(uncontrolled)', function () {
-      it('should not toggle checked false', function () {
-        render(
-          createElement('input', {
-            type: 'checkbox', defaultChecked: false, ref: getReference, onChange: handleChangeLocal
-          }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.isFalse(node.checked);
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.isFalse(node.checked);
+      createTest('should not toggle unchecked', {
+        tag: 'input',
+        props: { defaultChecked: false, type: 'checkbox' }
       });
 
-      it('should not toggle checked true', function () {
-        render(
-          createElement('input', {
-            type: 'checkbox', defaultChecked: true, ref: getReference, onChange: handleChangeLocal
-          }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.isTrue(node.checked);
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.isTrue(node.checked);
+      createTest('should not toggle checked', {
+        tag: 'input',
+        props: { defaultChecked: true, type: 'checkbox' }
       });
     });
   });
 
   describe('on radio', function () {
-    describe('(controlled)', function () {
-      it('should not toggle unchecked', function () {
-        render(
-          createElement('input',
-            { type: 'radio', checked: false, ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
+    it('should reattach checked property descriptor');
 
-        function handleChangeLocal() {
-          assert.isFalse(node.checked);
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.isFalse(node.checked);
+    describe('(controlled)', function () {
+      createTest('should not toggle unchecked', {
+        tag: 'input',
+        props: { checked: false, type: 'radio' }
       });
 
-      it('should not toggle checked', function () {
-        render(
-          createElement('input',
-            { type: 'radio', checked: true, ref: getReference, onChange: handleChangeLocal }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.isTrue(node.checked);
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.isTrue(node.checked);
+      createTest('should not toggle checked', {
+        tag: 'input',
+        props: { checked: true, type: 'radio' }
       });
     });
 
     describe('(uncontrolled)', function () {
-      it('should not toggle unchecked', function () {
-        render(
-          createElement('input', {
-            type: 'radio', defaultChecked: false, ref: getReference, onChange: handleChangeLocal
-          }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.isFalse(node.checked);
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.isFalse(node.checked);
+      createTest('should not toggle unchecked', {
+        tag: 'input',
+        props: { defaultChecked: false, type: 'radio' }
       });
 
-      it('should not toggle checked', function () {
-        render(
-          createElement('input', {
-            type: 'radio', defaultChecked: true, ref: getReference, onChange: handleChangeLocal
-          }),
-          container
-        );
-
-        function handleChangeLocal() {
-          assert.isTrue(node.checked);
-          changed = true;
-        }
-        triggerAndCheck();
-        assert.isTrue(node.checked);
+      createTest('should not toggle checked', {
+        tag: 'input',
+        props: { defaultChecked: true, type: 'radio' }
       });
     });
   });
