@@ -6,20 +6,21 @@ describe('#reactTriggerChange', function () {
 
   var container;
   var node;
-  var changed;
+  var changes;
 
   function getReference(element) {
     node = element;
   }
 
   function handleChange() {
-    changed = true;
+    changes += 1;
   }
 
   function triggerAndCheck() {
-    assert.isFalse(changed, 'change was triggered too early');
+    assert.strictEqual(changes, 0, 'change was triggered too early');
     reactTriggerChange(node);
-    assert.isTrue(changed, 'change was not triggered');
+    assert.notStrictEqual(changes, 0, 'change was not triggered');
+    assert.strictEqual(changes, 1, 'change was triggered multiple times');
   }
 
   function getCheckProperty(props) {
@@ -56,7 +57,7 @@ describe('#reactTriggerChange', function () {
       function handleChangeLocal() {
         // If checkbox is toggled manually, this will throw.
         assert.strictEqual(node[checkProperty], expected);
-        changed = true;
+        changes += 1;
       }
 
       props.ref = getReference;
@@ -91,7 +92,7 @@ describe('#reactTriggerChange', function () {
   }
 
   beforeEach(function () {
-    changed = false;
+    changes = 0;
     container = document.createElement('div');
     container.id = 'root';
     document.body.appendChild(container);
@@ -115,7 +116,7 @@ describe('#reactTriggerChange', function () {
       function handleChangeLocal() {
         assert.strictEqual(node.selectedIndex, 1);
         assert.strictEqual(node.value, 'opt2');
-        changed = true;
+        changes += 1;
       }
       triggerAndCheck();
       assert.strictEqual(node.selectedIndex, 1);
@@ -135,7 +136,7 @@ describe('#reactTriggerChange', function () {
       function handleChangeLocal() {
         assert.strictEqual(node.selectedIndex, 1);
         assert.strictEqual(node.value, 'opt2');
-        changed = true;
+        changes += 1;
       }
       triggerAndCheck();
       assert.strictEqual(node.selectedIndex, 1);
@@ -347,7 +348,7 @@ describe('#reactTriggerChange', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                checked: false, ref: getReference, onChange: handleChangeSelf,
+                checked: false, ref: getReference, onChange: handleChangeLocal,
                 name: 'foo', type: 'radio'
               }),
               createElement('input', {
@@ -357,10 +358,10 @@ describe('#reactTriggerChange', function () {
             container
           );
 
-          function handleChangeSelf() {
+          function handleChangeLocal() {
             assert.isFalse(node.checked);
             assert.isFalse(partner.checked);
-            changed = true;
+            changes += 1;
           }
           triggerAndCheck();
           assert.isFalse(node.checked);
@@ -371,7 +372,7 @@ describe('#reactTriggerChange', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                checked: true, ref: getReference, onChange: handleChangeSelf,
+                checked: true, ref: getReference, onChange: handleChangeLocal,
                 name: 'foo', type: 'radio'
               }),
               createElement('input', {
@@ -381,10 +382,10 @@ describe('#reactTriggerChange', function () {
             container
           );
 
-          function handleChangeSelf() {
+          function handleChangeLocal() {
             assert.isTrue(node.checked);
             assert.isFalse(partner.checked);
-            changed = true;
+            changes += 1;
           }
           triggerAndCheck();
           assert.isTrue(node.checked);
@@ -395,7 +396,7 @@ describe('#reactTriggerChange', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                checked: false, ref: getReference, onChange: handleChangeSelf,
+                checked: false, ref: getReference, onChange: handleChangeLocal,
                 name: 'foo', type: 'radio'
               }),
               createElement('input', {
@@ -405,10 +406,10 @@ describe('#reactTriggerChange', function () {
             container
           );
 
-          function handleChangeSelf() {
+          function handleChangeLocal() {
             assert.isFalse(node.checked);
             assert.isTrue(partner.checked);
-            changed = true;
+            changes += 1;
           }
           triggerAndCheck();
           assert.isFalse(node.checked);
@@ -421,7 +422,7 @@ describe('#reactTriggerChange', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                defaultChecked: false, ref: getReference, onChange: handleChangeSelf,
+                defaultChecked: false, ref: getReference, onChange: handleChangeLocal,
                 name: 'foo', type: 'radio'
               }),
               createElement('input', {
@@ -431,10 +432,10 @@ describe('#reactTriggerChange', function () {
             container
           );
 
-          function handleChangeSelf() {
+          function handleChangeLocal() {
             assert.isFalse(node.checked);
             assert.isFalse(partner.checked);
-            changed = true;
+            changes += 1;
           }
           triggerAndCheck();
           assert.isFalse(node.checked);
@@ -445,7 +446,7 @@ describe('#reactTriggerChange', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                defaultChecked: true, ref: getReference, onChange: handleChangeSelf,
+                defaultChecked: true, ref: getReference, onChange: handleChangeLocal,
                 name: 'foo', type: 'radio'
               }),
               createElement('input', {
@@ -455,10 +456,10 @@ describe('#reactTriggerChange', function () {
             container
           );
 
-          function handleChangeSelf() {
+          function handleChangeLocal() {
             assert.isTrue(node.checked);
             assert.isFalse(partner.checked);
-            changed = true;
+            changes += 1;
           }
           triggerAndCheck();
           assert.isTrue(node.checked);
@@ -469,7 +470,7 @@ describe('#reactTriggerChange', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                defaultChecked: false, ref: getReference, onChange: handleChangeSelf,
+                defaultChecked: false, ref: getReference, onChange: handleChangeLocal,
                 name: 'foo', type: 'radio'
               }),
               createElement('input', {
@@ -479,10 +480,10 @@ describe('#reactTriggerChange', function () {
             container
           );
 
-          function handleChangeSelf() {
+          function handleChangeLocal() {
             assert.isFalse(node.checked);
             assert.isTrue(partner.checked);
-            changed = true;
+            changes += 1;
           }
           triggerAndCheck();
           assert.isFalse(node.checked);
