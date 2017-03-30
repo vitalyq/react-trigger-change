@@ -12,7 +12,7 @@ describe('#reactTriggerChange', function () {
     node = element;
   }
 
-  function handleChange(event) {
+  function handleChange() {
     changed = true;
   }
 
@@ -22,6 +22,27 @@ describe('#reactTriggerChange', function () {
     assert.isTrue(changed, 'change was not triggered');
   }
 
+  function getCheckProperty(props) {
+    return (
+      'checked' in props ||
+      'defaultChecked' in props ?
+      'checked' : 'value');
+  }
+
+  function getExpectedValue(props) {
+    var expected;
+    [
+      'value', 'defaultValue',
+      'checked', 'defaultChecked'
+    ].some(function(key) {
+      if (key in props) {
+        expected = props[key];
+        return true;
+      }
+    });
+    return expected;
+  }
+
   // title - test title.
   // options.tag - tag name to create.
   // options.props - props object.
@@ -29,15 +50,8 @@ describe('#reactTriggerChange', function () {
     it(title, function () {
       var tag = options.tag;
       var props = options.props;
-      var checkProperty = 'checked' in props || 'defaultChecked' in props ?
-        'checked' : 'value';
-      var expected;
-      ['value', 'defaultValue', 'checked', 'defaultChecked'].some(function(key) {
-        if (key in props) {
-          expected = props[key];
-          return true;
-        }
-      });
+      var checkProperty = getCheckProperty(props);
+      var expected = getExpectedValue(props);
 
       function handleChangeLocal() {
         // If checkbox is toggled manually, this will throw.
@@ -47,12 +61,32 @@ describe('#reactTriggerChange', function () {
 
       props.ref = getReference;
       props.onChange = handleChangeLocal;
-      render(
-        createElement(tag, props),
-        container
-      );
+      render(createElement(tag, props), container);
       triggerAndCheck();
       assert.strictEqual(node[checkProperty], expected);
+    });
+  }
+
+  function createDescriptorTest(title, options) {
+    it(title, function () {
+      var tag = options.tag;
+      var props = options.props;
+      var checkProperty = getCheckProperty(props);
+      var descriptorFirst;
+      var descriptorLast;
+
+      props.ref = getReference;
+      render(createElement(tag, props), container);
+
+      descriptorFirst = Object.getOwnPropertyDescriptor(node, checkProperty);
+      if (descriptorFirst) {
+        reactTriggerChange(node);
+        descriptorLast = Object.getOwnPropertyDescriptor(node, checkProperty);
+        assert.strictEqual(descriptorLast.configurable, descriptorFirst.configurable);
+        assert.strictEqual(descriptorLast.enumerable, descriptorFirst.enumerable);
+        assert.strictEqual(descriptorLast.get, descriptorFirst.get);
+        assert.strictEqual(descriptorLast.set, descriptorFirst.set);
+      }
     });
   }
 
@@ -120,7 +154,10 @@ describe('#reactTriggerChange', function () {
   });
 
   describe('on text input', function () {
-    it('should reattach value property descriptor');
+    createDescriptorTest('should reattach value property descriptor (React 16)', {
+      tag: 'input',
+      props: { defaultValue: '' }
+    });
 
     describe('(controlled)', function () {
       createTest('should not change empty value', {
@@ -158,7 +195,10 @@ describe('#reactTriggerChange', function () {
   });
 
   describe('on checkbox', function () {
-    it('should reattach checked property descriptor');
+    createDescriptorTest('should reattach checked property descriptor (React 16)', {
+      tag: 'input',
+      props: { defaultChecked: false, type: 'checkbox' }
+    });
 
     describe('(controlled)', function () {
       createTest('should not toggle unchecked', {
@@ -186,7 +226,10 @@ describe('#reactTriggerChange', function () {
   });
 
   describe('on radio', function () {
-    it('should reattach checked property descriptor');
+    createDescriptorTest('should reattach checked property descriptor (React 16)', {
+      tag: 'input',
+      props: { defaultChecked: false, type: 'radio' }
+    });
 
     describe('(controlled)', function () {
       createTest('should not toggle unchecked', {
