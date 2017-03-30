@@ -62,6 +62,7 @@ module.exports = function(node) {
     // React 0.14: IE9
     // React 15: IE9-IE11
     // React 16
+    // In IE9-10 imperative change of node value triggers propertychange event.
     // Update inputValueTracking cached value.
     // Remove artificial value property.
     // Restore initial value to trigger event with it.
@@ -70,10 +71,10 @@ module.exports = function(node) {
     delete node.value;
     node.value = initialValue;
 
-    // React 0.14: IE9
-    // React 15: IE9-IE11
-    // React 16: IE9
-    // Dispatch propertychange.
+    // React 15: IE11
+    // For unknown reason React 15 added listener for propertychange with addEventListener.
+    // This doesn't work, propertychange events are deprecated in IE11,
+    // but allows us to dispatch fake propertychange which is handled by IE11.
     var propChangeEvent = document.createEvent('HTMLEvents');
     propChangeEvent.initEvent('propertychange', false, false);
     propChangeEvent.propertyName = 'value';
