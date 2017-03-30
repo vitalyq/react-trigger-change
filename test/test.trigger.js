@@ -154,42 +154,117 @@ describe('#reactTriggerChange', function () {
   });
 
   describe('on text input', function () {
+    var supportedInputTypes = {
+      color:            { filled: '#ff00ff',          empty: '#000000' },
+      date:             { filled: '2017-03-24',       empty: '' },
+      datetime:         { filled: '2017-03-29T11:11', empty: '' },
+      'datetime-local': { filled: '2017-03-29T11:11', empty: '' },
+      email:            { filled: '5',                empty: '' },
+      month:            { filled: '2017-03',          empty: '' },
+      number:           { filled: '5',                empty: '' },
+      password:         { filled: '5',                empty: '' },
+      range:            { filled: '5',                empty: '50' },
+      search:           { filled: '5',                empty: '' },
+      tel:              { filled: '5',                empty: '' },
+      text:             { filled: '5',                empty: '' },
+      time:             { filled: '14:14',            empty: '' },
+      url:              { filled: '5',                empty: '' },
+      week:             { filled: '2017-W11',         empty: '' }
+    };
+
+    var maxlengthSupport = {
+      email: true,
+      password: true,
+      search: true,
+      tel: true,
+      text: true,
+      url: true
+    }
+
     createDescriptorTest('should reattach value property descriptor (React 16)', {
       tag: 'input',
       props: { defaultValue: '' }
     });
 
     describe('(controlled)', function () {
-      createTest('should not change empty value', {
-        tag: 'input',
-        props: { value: '' }
+      describe('should not change empty value on input of type', function () {
+        Object.keys(supportedInputTypes).forEach(function(type) {
+          createTest(type, {
+            tag: 'input',
+            props: { value: supportedInputTypes[type].empty, type: type }
+          });
+        });
+        createTest('textarea', {
+          tag: 'textarea',
+          props: { value: '' }
+        });
       });
 
-      createTest('should not change non-empty value', {
-        tag: 'input',
-        props: { value: 'bar' }
+      describe('should not change non-empty value on input of type', function () {
+        Object.keys(supportedInputTypes).forEach(function(type) {
+          createTest(type, {
+            tag: 'input',
+            props: { value: supportedInputTypes[type].filled, type: type }
+          });
+        });
+        createTest('textarea', {
+          tag: 'textarea',
+          props: { value: '5' }
+        });
+      });
+
+      describe('should support maxlength attribute on input of type', function () {
+        Object.keys(maxlengthSupport).forEach(function(type) {
+          createTest(type, {
+            tag: 'input',
+            props: { value: supportedInputTypes[type].filled, type: type, maxLength: 1 }
+          });
+        });
+        createTest('textarea', {
+          tag: 'textarea',
+          props: { value: '5', maxLength: 1 }
+        });
       });
     });
 
     describe('(uncontrolled)', function () {
-      createTest('should not change empty value', {
-        tag: 'input',
-        props: { defaultValue: '' }
+      describe('should not change empty value on input of type', function () {
+        Object.keys(supportedInputTypes).forEach(function(type) {
+          createTest(type, {
+            tag: 'input',
+            props: { defaultValue: supportedInputTypes[type].empty, type: type }
+          });
+        });
+        createTest('textarea', {
+          tag: 'textarea',
+          props: { defaultValue: '' }
+        });
       });
 
-      createTest('should not change non-empty value', {
-        tag: 'input',
-        props: { defaultValue: 'bar' }
+      describe('should not change non-empty value on input of type', function () {
+        Object.keys(supportedInputTypes).forEach(function(type) {
+          createTest(type, {
+            tag: 'input',
+            props: { defaultValue: supportedInputTypes[type].filled, type: type }
+          });
+        });
+        createTest('textarea', {
+          tag: 'textarea',
+          props: { defaultValue: '5' }
+        });
       });
 
-      createTest('should support maxlength attribute on text input', {
-        tag: 'input',
-        props: { defaultValue: 'x', maxLength: 1 }
-      });
-
-      createTest('should support maxlength attribute on textarea', {
-        tag: 'textarea',
-        props: { defaultValue: 'x', maxLength: 1 }
+      describe('should support maxlength attribute on input of type', function () {
+        Object.keys(maxlengthSupport).forEach(function(type) {
+          createTest(type, {
+            tag: 'input',
+            props: { defaultValue: supportedInputTypes[type].filled, type: type, maxLength: 1 }
+          });
+        });
+        createTest('textarea', {
+          tag: 'textarea',
+          props: { defaultValue: '5', maxLength: 1 }
+        });
       });
     });
   });
