@@ -25,10 +25,14 @@ module.exports = function(node) {
   var type = node.type;
 
   var initialChecked;
+  var initialCheckedRadio;
   function preventChecking(event) {
     event.preventDefault();
     if (!initialChecked) {
       event.target.checked = false;
+    }
+    if (initialCheckedRadio) {
+      initialCheckedRadio.checked = true;
     }
   }
 
@@ -103,7 +107,6 @@ module.exports = function(node) {
     initialChecked = node.checked;
 
     // Find and cache initially checked radio in the group.
-    var initialCheckedRadio;
     if (node.name) {
       var radios = document.querySelectorAll('input[type="radio"][name="' + node.name + '"]');
       for (var i = 0; i < radios.length; i += 1) {
@@ -129,6 +132,7 @@ module.exports = function(node) {
     // Prevent toggling during event capturing phase.
     // Set checked value to false if initialChecked is false,
     // otherwise next listeners will see true.
+    // Restore initially checked radio in the group.
     node.addEventListener('click', preventChecking, true);
 
     // Dispatch click.
@@ -144,11 +148,6 @@ module.exports = function(node) {
     // Restore artificial checked property descriptor.
     if (descriptor) {
       Object.defineProperty(node, 'checked', descriptor);
-    }
-
-    // Restore initially checked radio in the group.
-    if (initialCheckedRadio) {
-      initialCheckedRadio.checked = true;
     }
   }
 }

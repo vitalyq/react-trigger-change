@@ -284,6 +284,7 @@ describe('#reactTriggerChange', function () {
 
           function handleChangeSelf() {
             assert.isFalse(node.checked);
+            assert.isFalse(partner.checked);
             changed = true;
           }
           triggerAndCheck();
@@ -307,6 +308,7 @@ describe('#reactTriggerChange', function () {
 
           function handleChangeSelf() {
             assert.isTrue(node.checked);
+            assert.isFalse(partner.checked);
             changed = true;
           }
           triggerAndCheck();
@@ -330,6 +332,7 @@ describe('#reactTriggerChange', function () {
 
           function handleChangeSelf() {
             assert.isFalse(node.checked);
+            assert.isTrue(partner.checked);
             changed = true;
           }
           triggerAndCheck();
@@ -355,6 +358,7 @@ describe('#reactTriggerChange', function () {
 
           function handleChangeSelf() {
             assert.isFalse(node.checked);
+            assert.isFalse(partner.checked);
             changed = true;
           }
           triggerAndCheck();
@@ -378,6 +382,7 @@ describe('#reactTriggerChange', function () {
 
           function handleChangeSelf() {
             assert.isTrue(node.checked);
+            assert.isFalse(partner.checked);
             changed = true;
           }
           triggerAndCheck();
@@ -401,6 +406,7 @@ describe('#reactTriggerChange', function () {
 
           function handleChangeSelf() {
             assert.isFalse(node.checked);
+            assert.isTrue(partner.checked);
             changed = true;
           }
           triggerAndCheck();
