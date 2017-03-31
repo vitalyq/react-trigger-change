@@ -6,9 +6,13 @@
   "author": "Vitaly Kuznetsov",
   "license": "MIT",
   "scripts": {
-    "build": "browserify src/trigger.js -o dist/react-trigger-change.js -s reactTriggerChange"
+    "build": "browserify src/trigger.js -o dist/react-trigger-change.js -s reactTriggerChange",
+    "lint": "eslint src"
   },
   "devDependencies": {
-    "browserify": "^14.1.0"
+    "browserify": "^14.1.0",
+    "eslint": "^3.18.0",
+    "eslint-config-airbnb-base": "^11.1.2",
+    "eslint-plugin-import": "^2.2.0"
   }
 }

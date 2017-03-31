@@ -1,0 +1,6 @@
+{
+  "extends": "airbnb-base/legacy",
+  "rules": {
+    "no-param-reassign": ["error", { "props": false }]
+  }
+}
