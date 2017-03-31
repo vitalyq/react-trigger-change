@@ -334,198 +334,67 @@ describe('#reactTriggerChange', function () {
 
   describe('on radio group', function () {
     describe('should not toggle any or trigger change on partner', function () {
-      var partner;
+      function createRadioGroupTest(title, controlled, selfVal, partnerVal) {
+        it(title, function () {
+          var partner;
+          var selfProps;
+          var partnerProps;
+          var valueProp = controlled ? 'checked' : 'defaultChecked';
 
-      function getPartner(element) {
-        partner = element;
-      }
+          function handleChangeLocal() {
+            assert.strictEqual(node.checked, selfVal, 'self value toggled');
+            assert.strictEqual(partner.checked, partnerVal, 'partner value toggled');
+            changes += 1;
+          }
 
-      function fail() {
-        assert.fail(null, null, 'change triggered on partner');
+          function getPartner(element) {
+            partner = element;
+          }
+
+          function fail() {
+            assert.fail(null, null, 'change triggered on partner');
+          }
+
+          selfProps = {
+            ref: getReference,
+            onChange: handleChangeLocal,
+            name: 'foo',
+            type: 'radio'
+          };
+          selfProps[valueProp] = selfVal;
+
+          partnerProps = {
+            ref: getPartner,
+            onChange: fail,
+            name: 'foo',
+            type: 'radio'
+          };
+          partnerProps[valueProp] = partnerVal;
+
+          render(
+            createElement('div', null,
+              createElement('input', selfProps),
+              createElement('input', partnerProps)),
+            container
+          );
+
+          triggerAndCheck();
+          handleChangeLocal();
+        });
       }
 
       describe('(controlled)', function () {
-        it('when botch unchecked', function () {
-          function handleChangeLocal() {
-            assert.isFalse(node.checked);
-            assert.isFalse(partner.checked);
-            changes += 1;
-          }
-
-          render(
-            createElement('div', null,
-              createElement('input', {
-                checked: false,
-                ref: getReference,
-                onChange: handleChangeLocal,
-                name: 'foo',
-                type: 'radio'
-              }),
-              createElement('input', {
-                checked: false,
-                ref: getPartner,
-                onChange: fail,
-                name: 'foo',
-                type: 'radio'
-              })),
-            container
-          );
-
-          triggerAndCheck();
-          handleChangeLocal();
-        });
-
-        it('when self checked and partner unchecked', function () {
-          function handleChangeLocal() {
-            assert.isTrue(node.checked);
-            assert.isFalse(partner.checked);
-            changes += 1;
-          }
-
-          render(
-            createElement('div', null,
-              createElement('input', {
-                checked: true,
-                ref: getReference,
-                onChange: handleChangeLocal,
-                name: 'foo',
-                type: 'radio'
-              }),
-              createElement('input', {
-                checked: false,
-                ref: getPartner,
-                onChange: fail,
-                name: 'foo',
-                type: 'radio'
-              })),
-            container
-          );
-
-          triggerAndCheck();
-          handleChangeLocal();
-        });
-
-        it('when self unchecked and partner checked', function () {
-          function handleChangeLocal() {
-            assert.isFalse(node.checked);
-            assert.isTrue(partner.checked);
-            changes += 1;
-          }
-
-          render(
-            createElement('div', null,
-              createElement('input', {
-                checked: false,
-                ref: getReference,
-                onChange: handleChangeLocal,
-                name: 'foo',
-                type: 'radio'
-              }),
-              createElement('input', {
-                checked: true,
-                ref: getPartner,
-                onChange: fail,
-                name: 'foo',
-                type: 'radio'
-              })),
-            container
-          );
-
-          triggerAndCheck();
-          handleChangeLocal();
-        });
+        var controlled = true;
+        createRadioGroupTest('when botch unchecked', controlled, false, false);
+        createRadioGroupTest('when self checked and partner unchecked', controlled, true, false);
+        createRadioGroupTest('when self unchecked and partner checked', controlled, false, true);
       });
 
       describe('(uncontrolled)', function () {
-        it('when botch unchecked', function () {
-          function handleChangeLocal() {
-            assert.isFalse(node.checked);
-            assert.isFalse(partner.checked);
-            changes += 1;
-          }
-
-          render(
-            createElement('div', null,
-              createElement('input', {
-                defaultChecked: false,
-                ref: getReference,
-                onChange: handleChangeLocal,
-                name: 'foo',
-                type: 'radio'
-              }),
-              createElement('input', {
-                defaultChecked: false,
-                ref: getPartner,
-                onChange: fail,
-                name: 'foo',
-                type: 'radio'
-              })),
-            container
-          );
-
-          triggerAndCheck();
-          handleChangeLocal();
-        });
-
-        it('when self checked and partner unchecked', function () {
-          function handleChangeLocal() {
-            assert.isTrue(node.checked);
-            assert.isFalse(partner.checked);
-            changes += 1;
-          }
-
-          render(
-            createElement('div', null,
-              createElement('input', {
-                defaultChecked: true,
-                ref: getReference,
-                onChange: handleChangeLocal,
-                name: 'foo',
-                type: 'radio'
-              }),
-              createElement('input', {
-                defaultChecked: false,
-                ref: getPartner,
-                onChange: fail,
-                name: 'foo',
-                type: 'radio'
-              })),
-            container
-          );
-
-          triggerAndCheck();
-          handleChangeLocal();
-        });
-
-        it('when self unchecked and partner checked', function () {
-          function handleChangeLocal() {
-            assert.isFalse(node.checked);
-            assert.isTrue(partner.checked);
-            changes += 1;
-          }
-
-          render(
-            createElement('div', null,
-              createElement('input', {
-                defaultChecked: false,
-                ref: getReference,
-                onChange: handleChangeLocal,
-                name: 'foo',
-                type: 'radio'
-              }),
-              createElement('input', {
-                defaultChecked: true,
-                ref: getPartner,
-                onChange: fail,
-                name: 'foo',
-                type: 'radio'
-              })),
-            container
-          );
-
-          triggerAndCheck();
-          handleChangeLocal();
-        });
+        var controlled = false;
+        createRadioGroupTest('when botch unchecked', controlled, false, false);
+        createRadioGroupTest('when self checked and partner unchecked', controlled, true, false);
+        createRadioGroupTest('when self unchecked and partner checked', controlled, false, true);
       });
     });
   });
