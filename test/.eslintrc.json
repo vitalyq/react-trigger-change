@@ -1,0 +1,15 @@
+{
+  "extends": "airbnb-base/legacy",
+  "env": {
+    "mocha": true
+  },
+  "rules": {
+    "func-names": 0
+  },
+  "globals": {
+    "chai": false,
+    "React": false,
+    "ReactDOM": false,
+    "reactTriggerChange": false
+  }
+}

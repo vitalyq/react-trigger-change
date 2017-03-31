@@ -1,9 +1,9 @@
 'use strict';
+
 describe('#reactTriggerChange', function () {
   var assert = chai.assert;
   var render = ReactDOM.render;
   var createElement = React.createElement;
-
   var container;
   var node;
   var changes;
@@ -35,11 +35,12 @@ describe('#reactTriggerChange', function () {
     [
       'value', 'defaultValue',
       'checked', 'defaultChecked'
-    ].some(function(key) {
+    ].some(function (key) {
       if (key in props) {
         expected = props[key];
         return true;
       }
+      return false;
     });
     return expected;
   }
@@ -104,6 +105,12 @@ describe('#reactTriggerChange', function () {
 
   describe('on select', function () {
     it('should not change index (controlled)', function () {
+      function handleChangeLocal() {
+        assert.strictEqual(node.selectedIndex, 1);
+        assert.strictEqual(node.value, 'opt2');
+        changes += 1;
+      }
+
       render(
         createElement('select',
           { value: 'opt2', ref: getReference, onChange: handleChangeLocal },
@@ -112,18 +119,17 @@ describe('#reactTriggerChange', function () {
         ),
         container
       );
+      triggerAndCheck();
+      handleChangeLocal();
+    });
 
+    it('should not change index (uncontrolled)', function () {
       function handleChangeLocal() {
         assert.strictEqual(node.selectedIndex, 1);
         assert.strictEqual(node.value, 'opt2');
         changes += 1;
       }
-      triggerAndCheck();
-      assert.strictEqual(node.selectedIndex, 1);
-      assert.strictEqual(node.value, 'opt2');
-    });
 
-    it('should not change index (uncontrolled)', function () {
       render(
         createElement('select',
           { defaultValue: 'opt2', ref: getReference, onChange: handleChangeLocal },
@@ -133,14 +139,8 @@ describe('#reactTriggerChange', function () {
         container
       );
 
-      function handleChangeLocal() {
-        assert.strictEqual(node.selectedIndex, 1);
-        assert.strictEqual(node.value, 'opt2');
-        changes += 1;
-      }
       triggerAndCheck();
-      assert.strictEqual(node.selectedIndex, 1);
-      assert.strictEqual(node.value, 'opt2');
+      handleChangeLocal();
     });
   });
 
@@ -156,21 +156,21 @@ describe('#reactTriggerChange', function () {
 
   describe('on text input', function () {
     var supportedInputTypes = {
-      color:            { filled: '#ff00ff',          empty: '#000000' },
-      date:             { filled: '2017-03-24',       empty: '' },
-      datetime:         { filled: '2017-03-29T11:11', empty: '' },
+      color: { filled: '#ff00ff', empty: '#000000' },
+      date: { filled: '2017-03-24', empty: '' },
+      datetime: { filled: '2017-03-29T11:11', empty: '' },
       'datetime-local': { filled: '2017-03-29T11:11', empty: '' },
-      email:            { filled: '5',                empty: '' },
-      month:            { filled: '2017-03',          empty: '' },
-      number:           { filled: '5',                empty: '' },
-      password:         { filled: '5',                empty: '' },
-      range:            { filled: '5',                empty: '50' },
-      search:           { filled: '5',                empty: '' },
-      tel:              { filled: '5',                empty: '' },
-      text:             { filled: '5',                empty: '' },
-      time:             { filled: '14:14',            empty: '' },
-      url:              { filled: '5',                empty: '' },
-      week:             { filled: '2017-W11',         empty: '' }
+      email: { filled: '5', empty: '' },
+      month: { filled: '2017-03', empty: '' },
+      number: { filled: '5', empty: '' },
+      password: { filled: '5', empty: '' },
+      range: { filled: '5', empty: '50' },
+      search: { filled: '5', empty: '' },
+      tel: { filled: '5', empty: '' },
+      text: { filled: '5', empty: '' },
+      time: { filled: '14:14', empty: '' },
+      url: { filled: '5', empty: '' },
+      week: { filled: '2017-W11', empty: '' }
     };
 
     var maxlengthSupport = {
@@ -180,7 +180,7 @@ describe('#reactTriggerChange', function () {
       tel: true,
       text: true,
       url: true
-    }
+    };
 
     createDescriptorTest('should reattach value property descriptor (React 16)', {
       tag: 'input',
@@ -189,7 +189,7 @@ describe('#reactTriggerChange', function () {
 
     describe('(controlled)', function () {
       describe('should not change empty value on input of type', function () {
-        Object.keys(supportedInputTypes).forEach(function(type) {
+        Object.keys(supportedInputTypes).forEach(function (type) {
           createTest(type, {
             tag: 'input',
             props: { value: supportedInputTypes[type].empty, type: type }
@@ -202,7 +202,7 @@ describe('#reactTriggerChange', function () {
       });
 
       describe('should not change non-empty value on input of type', function () {
-        Object.keys(supportedInputTypes).forEach(function(type) {
+        Object.keys(supportedInputTypes).forEach(function (type) {
           createTest(type, {
             tag: 'input',
             props: { value: supportedInputTypes[type].filled, type: type }
@@ -215,7 +215,7 @@ describe('#reactTriggerChange', function () {
       });
 
       describe('should support maxlength attribute on input of type', function () {
-        Object.keys(maxlengthSupport).forEach(function(type) {
+        Object.keys(maxlengthSupport).forEach(function (type) {
           createTest(type, {
             tag: 'input',
             props: { value: supportedInputTypes[type].filled, type: type, maxLength: 1 }
@@ -230,7 +230,7 @@ describe('#reactTriggerChange', function () {
 
     describe('(uncontrolled)', function () {
       describe('should not change empty value on input of type', function () {
-        Object.keys(supportedInputTypes).forEach(function(type) {
+        Object.keys(supportedInputTypes).forEach(function (type) {
           createTest(type, {
             tag: 'input',
             props: { defaultValue: supportedInputTypes[type].empty, type: type }
@@ -243,7 +243,7 @@ describe('#reactTriggerChange', function () {
       });
 
       describe('should not change non-empty value on input of type', function () {
-        Object.keys(supportedInputTypes).forEach(function(type) {
+        Object.keys(supportedInputTypes).forEach(function (type) {
           createTest(type, {
             tag: 'input',
             props: { defaultValue: supportedInputTypes[type].filled, type: type }
@@ -256,7 +256,7 @@ describe('#reactTriggerChange', function () {
       });
 
       describe('should support maxlength attribute on input of type', function () {
-        Object.keys(maxlengthSupport).forEach(function(type) {
+        Object.keys(maxlengthSupport).forEach(function (type) {
           createTest(type, {
             tag: 'input',
             props: { defaultValue: supportedInputTypes[type].filled, type: type, maxLength: 1 }
@@ -339,155 +339,192 @@ describe('#reactTriggerChange', function () {
       function getPartner(element) {
         partner = element;
       }
+
       function fail() {
         assert.fail(null, null, 'change triggered on partner');
       }
 
       describe('(controlled)', function () {
         it('when botch unchecked', function () {
-          render(
-            createElement('div', null,
-              createElement('input', {
-                checked: false, ref: getReference, onChange: handleChangeLocal,
-                name: 'foo', type: 'radio'
-              }),
-              createElement('input', {
-                checked: false, ref: getPartner, onChange: fail,
-                name: 'foo', type: 'radio'
-              })),
-            container
-          );
-
           function handleChangeLocal() {
             assert.isFalse(node.checked);
             assert.isFalse(partner.checked);
             changes += 1;
           }
-          triggerAndCheck();
-          assert.isFalse(node.checked);
-          assert.isFalse(partner.checked);
-        });
 
-        it('when self checked and partner unchecked', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                checked: true, ref: getReference, onChange: handleChangeLocal,
-                name: 'foo', type: 'radio'
+                checked: false,
+                ref: getReference,
+                onChange: handleChangeLocal,
+                name: 'foo',
+                type: 'radio'
               }),
               createElement('input', {
-                checked: false, ref: getPartner, onChange: fail,
-                name: 'foo', type: 'radio'
+                checked: false,
+                ref: getPartner,
+                onChange: fail,
+                name: 'foo',
+                type: 'radio'
               })),
             container
           );
 
+          triggerAndCheck();
+          handleChangeLocal();
+        });
+
+        it('when self checked and partner unchecked', function () {
           function handleChangeLocal() {
             assert.isTrue(node.checked);
             assert.isFalse(partner.checked);
             changes += 1;
           }
-          triggerAndCheck();
-          assert.isTrue(node.checked);
-          assert.isFalse(partner.checked);
-        });
 
-        it('when self unchecked and partner checked', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                checked: false, ref: getReference, onChange: handleChangeLocal,
-                name: 'foo', type: 'radio'
+                checked: true,
+                ref: getReference,
+                onChange: handleChangeLocal,
+                name: 'foo',
+                type: 'radio'
               }),
               createElement('input', {
-                checked: true, ref: getPartner, onChange: fail,
-                name: 'foo', type: 'radio'
+                checked: false,
+                ref: getPartner,
+                onChange: fail,
+                name: 'foo',
+                type: 'radio'
               })),
             container
           );
 
+          triggerAndCheck();
+          handleChangeLocal();
+        });
+
+        it('when self unchecked and partner checked', function () {
           function handleChangeLocal() {
             assert.isFalse(node.checked);
             assert.isTrue(partner.checked);
             changes += 1;
           }
+
+          render(
+            createElement('div', null,
+              createElement('input', {
+                checked: false,
+                ref: getReference,
+                onChange: handleChangeLocal,
+                name: 'foo',
+                type: 'radio'
+              }),
+              createElement('input', {
+                checked: true,
+                ref: getPartner,
+                onChange: fail,
+                name: 'foo',
+                type: 'radio'
+              })),
+            container
+          );
+
           triggerAndCheck();
-          assert.isFalse(node.checked);
-          assert.isTrue(partner.checked);
+          handleChangeLocal();
         });
       });
 
       describe('(uncontrolled)', function () {
         it('when botch unchecked', function () {
-          render(
-            createElement('div', null,
-              createElement('input', {
-                defaultChecked: false, ref: getReference, onChange: handleChangeLocal,
-                name: 'foo', type: 'radio'
-              }),
-              createElement('input', {
-                defaultChecked: false, ref: getPartner, onChange: fail,
-                name: 'foo', type: 'radio'
-              })),
-            container
-          );
-
           function handleChangeLocal() {
             assert.isFalse(node.checked);
             assert.isFalse(partner.checked);
             changes += 1;
           }
-          triggerAndCheck();
-          assert.isFalse(node.checked);
-          assert.isFalse(partner.checked);
-        });
 
-        it('when self checked and partner unchecked', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                defaultChecked: true, ref: getReference, onChange: handleChangeLocal,
-                name: 'foo', type: 'radio'
+                defaultChecked: false,
+                ref: getReference,
+                onChange: handleChangeLocal,
+                name: 'foo',
+                type: 'radio'
               }),
               createElement('input', {
-                defaultChecked: false, ref: getPartner, onChange: fail,
-                name: 'foo', type: 'radio'
+                defaultChecked: false,
+                ref: getPartner,
+                onChange: fail,
+                name: 'foo',
+                type: 'radio'
               })),
             container
           );
 
+          triggerAndCheck();
+          handleChangeLocal();
+        });
+
+        it('when self checked and partner unchecked', function () {
           function handleChangeLocal() {
             assert.isTrue(node.checked);
             assert.isFalse(partner.checked);
             changes += 1;
           }
-          triggerAndCheck();
-          assert.isTrue(node.checked);
-          assert.isFalse(partner.checked);
-        });
 
-        it('when self unchecked and partner checked', function () {
           render(
             createElement('div', null,
               createElement('input', {
-                defaultChecked: false, ref: getReference, onChange: handleChangeLocal,
-                name: 'foo', type: 'radio'
+                defaultChecked: true,
+                ref: getReference,
+                onChange: handleChangeLocal,
+                name: 'foo',
+                type: 'radio'
               }),
               createElement('input', {
-                defaultChecked: true, ref: getPartner, onChange: fail,
-                name: 'foo', type: 'radio'
+                defaultChecked: false,
+                ref: getPartner,
+                onChange: fail,
+                name: 'foo',
+                type: 'radio'
               })),
             container
           );
 
+          triggerAndCheck();
+          handleChangeLocal();
+        });
+
+        it('when self unchecked and partner checked', function () {
           function handleChangeLocal() {
             assert.isFalse(node.checked);
             assert.isTrue(partner.checked);
             changes += 1;
           }
+
+          render(
+            createElement('div', null,
+              createElement('input', {
+                defaultChecked: false,
+                ref: getReference,
+                onChange: handleChangeLocal,
+                name: 'foo',
+                type: 'radio'
+              }),
+              createElement('input', {
+                defaultChecked: true,
+                ref: getPartner,
+                onChange: fail,
+                name: 'foo',
+                type: 'radio'
+              })),
+            container
+          );
+
           triggerAndCheck();
-          assert.isFalse(node.checked);
-          assert.isTrue(partner.checked);
+          handleChangeLocal();
         });
       });
     });
