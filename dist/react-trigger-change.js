@@ -21,6 +21,25 @@ var supportedInputTypes = {
   week: true
 };
 
+// In IE10 propertychange is not dispatched on range input if invalid
+// value is set.
+function changeRangeValue(node) {
+  var initMin = node.min;
+  var initMax = node.max;
+  var initStep = node.step;
+  var initVal = Number(node.value);
+
+  node.min = initVal;
+  node.max = initVal + 1;
+  node.step = 1;
+  node.value = initVal + 1;
+  delete node.value;
+  node.min = initMin;
+  node.max = initMax;
+  node.step = initStep;
+  node.value = initVal;
+}
+
 module.exports = function(node) {
   var nodeName = node.nodeName.toLowerCase();
   var type = node.type;
@@ -67,10 +86,14 @@ module.exports = function(node) {
     // Update inputValueTracking cached value.
     // Remove artificial value property.
     // Restore initial value to trigger event with it.
-    var initialValue = node.value;
-    node.value = initialValue + '#';
-    delete node.value;
-    node.value = initialValue;
+    if (type === 'range') {
+      changeRangeValue(node);
+    } else {
+      var initialValue = node.value;
+      node.value = initialValue + '#';
+      delete node.value;
+      node.value = initialValue;
+    }
 
     // React 15: IE11
     // For unknown reason React 15 added listener for propertychange with addEventListener.
