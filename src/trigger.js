@@ -39,16 +39,35 @@ function changeRangeValue(node) {
   node.value = initVal;
 }
 
-module.exports = function(node) {
+module.exports = function reactTriggerChange(node) {
   var nodeName = node.nodeName.toLowerCase();
   var type = node.type;
-
+  var event;
+  var descriptor;
+  var initialValue;
   var initialChecked;
   var initialCheckedRadio;
-  function preventChecking(event) {
-    event.preventDefault();
+
+  function memoizeChecked(name) {
+    var radios;
+    var i;
+    if (name) {
+      radios = document.querySelectorAll('input[type="radio"][name="' + name + '"]');
+      for (i = 0; i < radios.length; i += 1) {
+        if (radios[i].checked) {
+          if (radios[i] !== node) {
+            initialCheckedRadio = radios[i];
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  function preventChecking(e) {
+    e.preventDefault();
     if (!initialChecked) {
-      event.target.checked = false;
+      e.target.checked = false;
     }
     if (initialCheckedRadio) {
       initialCheckedRadio.checked = true;
@@ -59,24 +78,23 @@ module.exports = function(node) {
     (nodeName === 'input' && type === 'file')) {
     // IE9-IE11, non-IE
     // Dispatch change.
-    var changeEvent = document.createEvent('HTMLEvents');
-    changeEvent.initEvent('change', true, false);
-    node.dispatchEvent(changeEvent);
-
+    event = document.createEvent('HTMLEvents');
+    event.initEvent('change', true, false);
+    node.dispatchEvent(event);
   } else if ((nodeName === 'input' && supportedInputTypes[type]) ||
     nodeName === 'textarea') {
     // React 16
     // Cache artificial value property descriptor.
     // Property doesn't exist in React <16, descriptor is undefined.
-    var descriptor = Object.getOwnPropertyDescriptor(node, 'value');
+    descriptor = Object.getOwnPropertyDescriptor(node, 'value');
 
     // React 0.14: IE9
     // React 15: IE9-IE11
     // React 16: IE9
     // Dispatch focus.
-    var focusEvent = document.createEvent('UIEvents');
-    focusEvent.initEvent('focus', false, false);
-    node.dispatchEvent(focusEvent);
+    event = document.createEvent('UIEvents');
+    event.initEvent('focus', false, false);
+    node.dispatchEvent(event);
 
     // React 0.14: IE9
     // React 15: IE9-IE11
@@ -88,7 +106,7 @@ module.exports = function(node) {
     if (type === 'range') {
       changeRangeValue(node);
     } else {
-      var initialValue = node.value;
+      initialValue = node.value;
       node.value = initialValue + '#';
       delete node.value;
       node.value = initialValue;
@@ -98,57 +116,45 @@ module.exports = function(node) {
     // For unknown reason React 15 added listener for propertychange with addEventListener.
     // This doesn't work, propertychange events are deprecated in IE11,
     // but allows us to dispatch fake propertychange which is handled by IE11.
-    var propChangeEvent = document.createEvent('HTMLEvents');
-    propChangeEvent.initEvent('propertychange', false, false);
-    propChangeEvent.propertyName = 'value';
-    node.dispatchEvent(propChangeEvent);
+    event = document.createEvent('HTMLEvents');
+    event.initEvent('propertychange', false, false);
+    event.propertyName = 'value';
+    node.dispatchEvent(event);
 
     // React 0.14: IE10-IE11, non-IE
     // React 15: non-IE
     // React 16: IE10-IE11, non-IE
-    var inputEvent = document.createEvent('HTMLEvents');
-    inputEvent.initEvent('input', true, false);
-    node.dispatchEvent(inputEvent);
+    event = document.createEvent('HTMLEvents');
+    event.initEvent('input', true, false);
+    node.dispatchEvent(event);
 
     // React 16
     // Restore artificial value property descriptor.
     if (descriptor) {
       Object.defineProperty(node, 'value', descriptor);
     }
-
   } else if (nodeName === 'input' && type === 'checkbox') {
     // Invert inputValueTracking cached value.
     node.checked = !node.checked;
 
     // Dispatch click.
     // Click event inverts checked value.
-    var clickEvent = document.createEvent('MouseEvents');
-    clickEvent.initEvent('click', true, true);
-    node.dispatchEvent(clickEvent);
-
+    event = document.createEvent('MouseEvents');
+    event.initEvent('click', true, true);
+    node.dispatchEvent(event);
   } else if (nodeName === 'input' && type === 'radio') {
     // Cache initial checked value.
     initialChecked = node.checked;
 
     // Find and cache initially checked radio in the group.
-    if (node.name) {
-      var radios = document.querySelectorAll('input[type="radio"][name="' + node.name + '"]');
-      for (var i = 0; i < radios.length; i += 1) {
-        if (radios[i].checked) {
-          if (radios[i] !== node) {
-            initialCheckedRadio = radios[i];
-          }
-          break;
-        }
-      }
-    }
+    memoizeChecked(node.name);
 
     // React 16
     // Cache property descriptor.
     // Invert inputValueTracking cached value.
     // Remove artificial checked property.
     // Restore initial value, otherwise preventDefault will eventually revert the value.
-    var descriptor = Object.getOwnPropertyDescriptor(node, 'checked');
+    descriptor = Object.getOwnPropertyDescriptor(node, 'checked');
     node.checked = !initialChecked;
     delete node.checked;
     node.checked = initialChecked;
@@ -161,9 +167,9 @@ module.exports = function(node) {
 
     // Dispatch click.
     // Click event inverts checked value.
-    var clickEvent = document.createEvent('MouseEvents');
-    clickEvent.initEvent('click', true, true);
-    node.dispatchEvent(clickEvent);
+    event = document.createEvent('MouseEvents');
+    event.initEvent('click', true, true);
+    node.dispatchEvent(event);
 
     // Remove listener to stop further change prevention.
     node.removeEventListener('click', preventChecking, true);
@@ -174,4 +180,4 @@ module.exports = function(node) {
       Object.defineProperty(node, 'checked', descriptor);
     }
   }
-}
+};
