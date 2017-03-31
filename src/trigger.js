@@ -48,14 +48,15 @@ module.exports = function reactTriggerChange(node) {
   var initialChecked;
   var initialCheckedRadio;
 
-  function memoizeChecked(name) {
+  function memoizeChecked(radio) {
+    var name = radio.name;
     var radios;
     var i;
     if (name) {
       radios = document.querySelectorAll('input[type="radio"][name="' + name + '"]');
       for (i = 0; i < radios.length; i += 1) {
         if (radios[i].checked) {
-          if (radios[i] !== node) {
+          if (radios[i] !== radio) {
             initialCheckedRadio = radios[i];
           }
           break;
@@ -147,7 +148,7 @@ module.exports = function reactTriggerChange(node) {
     initialChecked = node.checked;
 
     // Find and cache initially checked radio in the group.
-    memoizeChecked(node.name);
+    memoizeChecked(node);
 
     // React 16
     // Cache property descriptor.
