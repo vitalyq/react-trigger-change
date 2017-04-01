@@ -11,8 +11,11 @@
   <script src="https://unpkg.com/mocha@3.2.0/mocha.js"></script>
   <script src="https://unpkg.com/chai@3.5.0/chai.js"></script>
   <script src="helpers/load-script-series.js"></script>
-  <script src="helpers/rAF.js"></script>
   <script src="../dist/react-trigger-change.js"></script>
+
+  <!-- Polyfills for React 16 -->
+  <script src="helpers/rAF.js"></script>
+  <script src="helpers/es6-set.js"></script>
 
   <script>
     // Load React version based on query string.
