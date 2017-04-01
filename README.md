@@ -10,25 +10,35 @@ With npm:
 
 `npm install react-trigger-change --save-dev`
 
-In browser:
+From a CDN:
 
-`<script src=""></script>`
+`<script src="https://unpkg.com/react-trigger-change/dist/react-trigger-change.js"></script>`
 
-## Usage
+## Use
 
 `reactTriggerChange(DOMElement);`
 
-## Example
+*DOMElement* - native DOM element, will be the target of change event.
+
+One way to obtain a DOM element in React is to use `ref` attribute:
 
 ```
-var node;
+let node;
 ReactDOM.render(
   <input
     onChange={console.log('changed')}
-    ref={(input) => { node = input; }}
+    ref={input => node = input}
   />,
-  document.getElementById('root')
+  mountNode
 );
 
-reactTriggerChange(node); // changed
+reactTriggerChange(node); // 'changed' is logged
 ```
+
+## Test
+
+Open `test/test.html` in the browser.
+Specify React version with a query string, for example:
+
+`?version=15.4.2` for React v15.4.2  
+`?version=16.0.0-alpha.6&min=1` for minified React v16.0.0-alpha.6
