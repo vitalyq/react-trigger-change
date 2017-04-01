@@ -1,8 +1,10 @@
 # react-trigger-change
 
-In React production builds `ReactTestUtils.Simulate` doesn't work because of dead code elimination. Thus, there is no reliable way to dispatch synthetic change events on elements.
+Library for triggering [React](https://github.com/facebook/react/)'s synthetic change events on input, textarea and select elements.
 
-This module is a hack and is tightly coupled with React's implementation details. May break with each new version of React. Not intended for production use. Useful for end-to-end testing and debugging.
+In production builds of React `ReactTestUtils.Simulate` doesn't work because of dead code elimination. There is no other built-in way to dispatch synthetic change events.
+
+This module is a hack and is tightly coupled with React's implementation details. Not intended for production use. Useful for end-to-end testing and debugging.
 
 ## Install
 
