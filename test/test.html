@@ -17,14 +17,15 @@
   <script>
     // Load React version based on query string.
     var defaultVersion = '15.4.2';
-    var getVersion = /[?&]version=([^&]*)/;
-    var result = getVersion.exec(location.search);
-    var version = result ? result[1] : defaultVersion;
+    var versionRes = /[?&]version=([^&]*)/.exec(location.search);
+    var version = versionRes ? versionRes[1] : defaultVersion;
+    var minRes = /[?&]min=([^&]*)/.exec(location.search);
+    var min = minRes && minRes[1] === '1' ? '.min' : '';
 
     mocha.setup('bdd');
     loadScriptSeries([
-      'https://unpkg.com/react@' + version + '/dist/react.min.js',
-      'https://unpkg.com/react-dom@' + version + '/dist/react-dom.min.js',
+      'https://unpkg.com/react@' + version + '/dist/react' + min + '.js',
+      'https://unpkg.com/react-dom@' + version + '/dist/react-dom' + min + '.js',
       'test.change.js'
     ], function () {
       mocha.run();
