@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "browserify src/change.js -o dist/react-trigger-change.js -s reactTriggerChange",
-    "lint": "eslint src test"
+    "lint": "eslint src \"test/*.js\""
   },
   "devDependencies": {
     "browserify": "^14.1.0",
