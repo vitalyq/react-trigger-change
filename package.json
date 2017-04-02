@@ -2,12 +2,12 @@
   "name": "react-trigger-change",
   "version": "1.0.0",
   "description": "Trigger React's synthetic change events on input, textarea and select elements",
-  "main": "src/change.js",
   "author": "Vitaly Kuznetsov",
   "license": "MIT",
+  "main": "lib/change.js",
   "scripts": {
-    "build": "browserify src/change.js -o dist/react-trigger-change.js -s reactTriggerChange",
-    "lint": "eslint src \"test/*.js\""
+    "build": "browserify lib/change.js -o dist/react-trigger-change.js -s reactTriggerChange",
+    "lint": "eslint lib \"test/*.js\""
   },
   "devDependencies": {
     "browserify": "^14.1.0",
