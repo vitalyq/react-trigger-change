@@ -2,21 +2,29 @@
   "name": "react-trigger-change",
   "version": "1.0.0",
   "description": "Trigger React's synthetic change events on input, textarea and select elements",
-  "author": "Vitaly Kuznetsov",
   "license": "MIT",
+  "repository": "vitalyq/react-trigger-change",
+  "author": "Vitaly Kuznetsov",
   "main": "lib/change.js",
   "scripts": {
     "build": "webpack lib/change.js dist/react-trigger-change.js --output-library=reactTriggerChange --output-library-target=umd",
     "lint": "eslint lib \"test/*.js\""
   },
-  "files": [
-    "lib",
-    "dist"
-  ],
   "devDependencies": {
     "eslint": "^3.18.0",
     "eslint-config-airbnb-base": "^11.1.2",
     "eslint-plugin-import": "^2.2.0",
     "webpack": "^2.3.2"
-  }
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "trigger",
+    "dispatch",
+    "change",
+    "event"
+  ]
 }
