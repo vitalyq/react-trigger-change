@@ -9,6 +9,10 @@
     "build": "browserify lib/change.js -o dist/react-trigger-change.js -s reactTriggerChange",
     "lint": "eslint lib \"test/*.js\""
   },
+  "files": [
+    "lib",
+    "dist"
+  ],
   "devDependencies": {
     "browserify": "^14.1.0",
     "eslint": "^3.18.0",
