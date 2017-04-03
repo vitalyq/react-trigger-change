@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "lib/change.js",
   "scripts": {
-    "build": "browserify lib/change.js -o dist/react-trigger-change.js -s reactTriggerChange",
+    "build": "webpack lib/change.js dist/react-trigger-change.js --output-library=reactTriggerChange --output-library-target=umd",
     "lint": "eslint lib \"test/*.js\""
   },
   "files": [
@@ -14,9 +14,9 @@
     "dist"
   ],
   "devDependencies": {
-    "browserify": "^14.1.0",
     "eslint": "^3.18.0",
     "eslint-config-airbnb-base": "^11.1.2",
-    "eslint-plugin-import": "^2.2.0"
+    "eslint-plugin-import": "^2.2.0",
+    "webpack": "^2.3.2"
   }
 }

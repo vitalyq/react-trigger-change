@@ -39,6 +39,13 @@ reactTriggerChange(node); // 'changed' is logged
 
 ## Test
 
+Build the browser bundle:
+
+```
+npm install
+npm run build
+```
+
 Open `test/test.html` in the browser.
 Specify React version with a query string, for example:
 
