@@ -10,21 +10,27 @@ This module is a hack and is tightly coupled with React's implementation details
 
 With npm:
 
-`npm install react-trigger-change --save-dev`
+```
+npm install react-trigger-change --save-dev
+```
 
 From a CDN:
 
-`<script src="https://unpkg.com/react-trigger-change/dist/react-trigger-change.js"></script>`
+```HTML
+<script src="https://unpkg.com/react-trigger-change/dist/react-trigger-change.js"></script>
+```
 
 ## Use
 
-`reactTriggerChange(DOMElement);`
+```JSX
+reactTriggerChange(DOMElement);
+```
 
 *DOMElement* - native DOM element, will be the target of change event.
 
 One way to obtain a DOM element in React is to use `ref` attribute:
 
-```
+```JSX
 let node;
 ReactDOM.render(
   <input
