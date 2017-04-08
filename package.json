@@ -1,6 +1,6 @@
 {
   "name": "react-trigger-change",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Trigger React's synthetic change events on input, textarea and select elements",
   "license": "MIT",
   "repository": "vitalyq/react-trigger-change",

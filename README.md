@@ -34,8 +34,8 @@ One way to obtain a DOM element in React is to use `ref` attribute:
 let node;
 ReactDOM.render(
   <input
-    onChange={console.log('changed')}
-    ref={input => node = input}
+    onChange={() => console.log('changed')}
+    ref={(input) => { node = input; }}
   />,
   mountNode
 );
