@@ -271,11 +271,6 @@ describe('#reactTriggerChange', function () {
   });
 
   describe('on checkbox', function () {
-    createDescriptorTest('should reattach checked property descriptor (React 16)', {
-      tag: 'input',
-      props: { defaultChecked: false, type: 'checkbox' }
-    });
-
     describe('(controlled)', function () {
       createTest('should not toggle unchecked', {
         tag: 'input',
