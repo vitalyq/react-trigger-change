@@ -11,6 +11,7 @@
   <script src="https://unpkg.com/mocha@3.2.0/mocha.js"></script>
   <script src="https://unpkg.com/chai@3.5.0/chai.js"></script>
   <script src="vendor/load-script-series.js"></script>
+  <script src="vendor/saucelabs-reporting.js"></script>
   <script src="../dist/react-trigger-change.js"></script>
 
   <!-- Polyfills for React 16 -->
@@ -31,7 +32,7 @@
       'https://unpkg.com/react-dom@' + version + '/dist/react-dom' + min + '.js',
       'test.change.js'
     ], function () {
-      mocha.run();
+      saucelabsReporting(mocha.run());
     });
   </script>
 </body>
