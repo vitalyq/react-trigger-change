@@ -10,7 +10,8 @@
     "lint": "eslint lib \"test/*.js\"",
     "build:dev": "webpack lib/change.js dist/react-trigger-change.js --output-library=reactTriggerChange --output-library-target=umd",
     "build:min": "webpack lib/change.js dist/react-trigger-change.min.js -p --output-library=reactTriggerChange --output-library-target=umd",
-    "build": "npm run build:dev && npm run build:min"
+    "build": "npm run build:dev && npm run build:min",
+    "test": "grunt"
   },
   "devDependencies": {
     "eslint": "3.19.0",
