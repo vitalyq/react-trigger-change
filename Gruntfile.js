@@ -10,6 +10,21 @@ module.exports = function gruntConfig(grunt) {
     { browserName: 'internet explorer', version: '10.0', platform: 'Windows 7' },
     { browserName: 'internet explorer', version: '9.0', platform: 'Windows 7' }
   ];
+  var testURL = 'http://127.0.0.1:9999/test/test.html';
+  var cdnURL = 'https://unpkg.com/';
+  var reactPaths = [
+    ['react@0.14.9/dist/react.js', 'react-dom@0.14.9/dist/react-dom.js'],
+    ['react@0.14.9/dist/react.min.js', 'react-dom@0.14.9/dist/react-dom.min.js'],
+    ['react@15.5.4/dist/react.js', 'react-dom@15.5.4/dist/react-dom.js'],
+    ['react@15.5.4/dist/react.min.js', 'react-dom@15.5.4/dist/react-dom.min.js'],
+    ['react@16.0.0-alpha.10/umd/react.development.js',
+      'react-dom@16.0.0-alpha.10/umd/react-dom.development.js'],
+    ['react@16.0.0-alpha.10/umd/react.production.min.js',
+      'react-dom@16.0.0-alpha.10/umd/react-dom.production.min.js']
+  ];
+  var urls = reactPaths.map(function mapPaths(path) {
+    return testURL + '?react=' + cdnURL + path[0] + '&dom=' + cdnURL + path[1];
+  });
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -24,9 +39,7 @@ module.exports = function gruntConfig(grunt) {
     'saucelabs-mocha': {
       all: {
         options: {
-          urls: [
-            'http://127.0.0.1:9999/test/test.html'
-          ],
+          urls: urls,
           browsers: browsers,
           build: process.env.TRAVIS_JOB_ID,
           testname: 'Mocha Unit Tests',
