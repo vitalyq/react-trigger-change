@@ -19,19 +19,17 @@
   <script src="vendor/es6-set.js"></script>
 
   <script>
-    // Load React version based on query string.
-    var defaultVersion = '15.4.2';
-    var versionRes = /[?&]version=([^&]*)/.exec(location.search);
-    var version = versionRes ? versionRes[1] : defaultVersion;
-    var minRes = /[?&]min=([^&]*)/.exec(location.search);
-    var min = minRes && minRes[1] === '1' ? '.min' : '';
+    // Load React and ReactDOM based on query string.
+    var defaultReactPath = 'https://unpkg.com/react@15.5.4/dist/react.js';
+    var defaultReactDOMPath = 'https://unpkg.com/react-dom@15.5.4/dist/react-dom.js';
+
+    var reactRes = /[?&]react=([^&]*)/.exec(location.search);
+    var reactPath = reactRes ? reactRes[1] : defaultReactPath;
+    var reactDOMRes = /[?&]dom=([^&]*)/.exec(location.search);
+    var reactDOMPath = reactDOMRes ? reactDOMRes[1] : defaultReactDOMPath;
 
     mocha.setup('bdd');
-    loadScriptSeries([
-      'https://unpkg.com/react@' + version + '/dist/react' + min + '.js',
-      'https://unpkg.com/react-dom@' + version + '/dist/react-dom' + min + '.js',
-      'test.change.js'
-    ], function () {
+    loadScriptSeries([reactPath, reactDOMPath, 'test.change.js'], function () {
       saucelabsReporting(mocha.run());
     });
   </script>
