@@ -53,7 +53,9 @@ npm run build
 ```
 
 Open `test/test.html` in the browser.
-Specify React version with a query string, for example:
 
-`?version=15.4.2` for React v15.4.2  
-`?version=16.0.0-alpha.6&min=1` for minified React v16.0.0-alpha.6
+To test with a different version of React, specify React and ReactDOM URLs in a query string:
+
+```
+?react=https://unpkg.com/react@15.5.4/dist/react.js&dom=https://unpkg.com/react-dom@15.5.4/dist/react-dom.js
+```
