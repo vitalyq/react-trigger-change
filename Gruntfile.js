@@ -33,8 +33,10 @@ module.exports = function gruntConfig(grunt) {
           throttled: 5,
           sauceConfig: {
             recordVideo: false,
-            recordScreenshots: false
-          }
+            recordScreenshots: false,
+            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+          },
+          tunneled: false
         }
       }
     },
