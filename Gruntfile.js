@@ -42,7 +42,7 @@ module.exports = function gruntConfig(grunt) {
           urls: urls,
           browsers: browsers,
           build: process.env.TRAVIS_JOB_ID,
-          testname: 'Mocha Unit Tests',
+          testname: 'unit tests',
           throttled: 5,
           sauceConfig: {
             recordVideo: false,
