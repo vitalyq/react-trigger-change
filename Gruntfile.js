@@ -6,8 +6,8 @@ module.exports = function gruntConfig(grunt) {
     { browserName: 'firefox', version: '52.0', platform: 'Windows 10' },
     { browserName: 'safari', version: '10.0', platform: 'macOS 10.12' },
     { browserName: 'MicrosoftEdge', version: '14.14393', platform: 'Windows 10' },
-    { browserName: 'internet explorer', version: '11.103', platform: 'Windows 10' },
-    { browserName: 'internet explorer', version: '10.0', platform: 'Windows 7' },
+    { browserName: 'internet explorer', version: '11.0', platform: 'Windows 8.1' },
+    { browserName: 'internet explorer', version: '10.0', platform: 'Windows 8' },
     { browserName: 'internet explorer', version: '9.0', platform: 'Windows 7' }
   ];
   var testURL = 'http://127.0.0.1:9999/test/test.html';
