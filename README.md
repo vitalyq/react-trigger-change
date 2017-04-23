@@ -1,4 +1,6 @@
-# react-trigger-change
+# react-trigger-change [![Build Status](https://travis-ci.org/vitalyq/react-trigger-change.svg?branch=master)](https://travis-ci.org/vitalyq/react-trigger-change)
+
+[![Build Status](https://saucelabs.com/browser-matrix/vitalyq.svg)](https://saucelabs.com/u/vitalyq)
 
 Library for triggering [React](https://github.com/facebook/react/)'s synthetic change events on input, textarea and select elements.
 
