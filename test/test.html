@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <title>Mocha Tests</title>
-  <link rel="stylesheet" href="https://unpkg.com/mocha@3.2.0/mocha.css">
+  <link rel="stylesheet" href="https://unpkg.com/mocha@4.1.0/mocha.css">
 </head>
 <body>
   <div id="mocha"></div>
 
-  <script src="https://unpkg.com/mocha@3.2.0/mocha.js"></script>
-  <script src="https://unpkg.com/chai@3.5.0/chai.js"></script>
+  <script src="https://unpkg.com/mocha@4.1.0/mocha.js"></script>
+  <script src="https://unpkg.com/chai@4.1.2/chai.js"></script>
   <script src="vendor/load-script-series.js"></script>
   <script src="vendor/saucelabs-reporting.js"></script>
   <script src="../dist/react-trigger-change.js"></script>
@@ -20,8 +20,8 @@
 
   <script>
     // Load React and ReactDOM based on query string.
-    var defaultReactPath = 'https://unpkg.com/react@15.5.4/dist/react.js';
-    var defaultReactDOMPath = 'https://unpkg.com/react-dom@15.5.4/dist/react-dom.js';
+    var defaultReactPath = 'https://unpkg.com/react@16.2.0/umd/react.production.min.js';
+    var defaultReactDOMPath = 'https://unpkg.com/react-dom@16.2.0/umd/react-dom.production.min.js';
 
     var reactRes = /[?&]react=([^&]*)/.exec(location.search);
     var reactPath = reactRes ? reactRes[1] : defaultReactPath;

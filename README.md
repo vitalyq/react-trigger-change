@@ -59,5 +59,5 @@ Open `test/test.html` in the browser.
 To test with a different version of React, specify React and ReactDOM URLs in a query string:
 
 ```
-?react=https://unpkg.com/react@15.5.4/dist/react.js&dom=https://unpkg.com/react-dom@15.5.4/dist/react-dom.js
+?react=https://unpkg.com/react@16.2.0/umd/react.development.js&dom=https://unpkg.com/react-dom@16.2.0/umd/react-dom.development.js
 ```
