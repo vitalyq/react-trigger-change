@@ -2,9 +2,9 @@
 
 module.exports = function gruntConfig(grunt) {
   var browsers = [
-    { browserName: 'chrome', version: '57.0', platform: 'Windows 10' },
-    { browserName: 'firefox', version: '52.0', platform: 'Windows 10' },
-    { browserName: 'safari', version: '10.0', platform: 'macOS 10.12' },
+    { browserName: 'chrome', version: '63.0', platform: 'Windows 10' },
+    { browserName: 'firefox', version: '58.0', platform: 'Windows 10' },
+    { browserName: 'safari', version: '8.0', platform: 'OS X 10.10' },
     { browserName: 'MicrosoftEdge', version: '14.14393', platform: 'Windows 10' },
     { browserName: 'internet explorer', version: '11.0', platform: 'Windows 8.1' },
     { browserName: 'internet explorer', version: '10.0', platform: 'Windows 8' },
@@ -13,14 +13,10 @@ module.exports = function gruntConfig(grunt) {
   var testURL = 'http://127.0.0.1:9999/test/test.html';
   var cdnURL = 'https://unpkg.com/';
   var reactPaths = [
-    ['react@0.14.9/dist/react.js', 'react-dom@0.14.9/dist/react-dom.js'],
-    ['react@0.14.9/dist/react.min.js', 'react-dom@0.14.9/dist/react-dom.min.js'],
-    ['react@15.5.4/dist/react.js', 'react-dom@15.5.4/dist/react-dom.js'],
-    ['react@15.5.4/dist/react.min.js', 'react-dom@15.5.4/dist/react-dom.min.js'],
-    ['react@16.0.0-alpha.10/umd/react.development.js',
-      'react-dom@16.0.0-alpha.10/umd/react-dom.development.js'],
-    ['react@16.0.0-alpha.10/umd/react.production.min.js',
-      'react-dom@16.0.0-alpha.10/umd/react-dom.production.min.js']
+    ['react@15.6.2/dist/react.min.js',
+      'react-dom@15.6.2/dist/react-dom.min.js'],
+    ['react@16.2.0/umd/react.production.min.js',
+      'react-dom@16.2.0/umd/react-dom.production.min.js']
   ];
   var urls = reactPaths.map(function mapPaths(path) {
     return testURL + '?react=' + cdnURL + path[0] + '&dom=' + cdnURL + path[1];
