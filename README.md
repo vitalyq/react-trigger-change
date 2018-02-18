@@ -1,4 +1,4 @@
-# react-trigger-change [![Build Status](https://travis-ci.org/vitalyq/react-trigger-change.svg?branch=master)](https://travis-ci.org/vitalyq/react-trigger-change)
+# react-trigger-change [![Build Status](https://img.shields.io/travis/vitalyq/react-trigger-change.svg)](https://travis-ci.org/vitalyq/react-trigger-change) [![Npm Version](https://img.shields.io/npm/v/react-trigger-change.svg)](https://www.npmjs.com/package/react-trigger-change)
 
 [![Build Status](https://saucelabs.com/browser-matrix/vitalyq.svg)](https://saucelabs.com/u/vitalyq)
 
